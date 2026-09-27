@@ -258,46 +258,48 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{anim
   </div>
   <script>
 (() => {
-  const reducedPreference=matchMedia('(prefers-reduced-motion: reduce)');
-  const motionButton=document.getElementById('motion-toggle');
-  const reduceLabel=document.querySelector('[data-template-id="motion-reduce-label"]');
-  const enableLabel=document.querySelector('[data-template-id="motion-enable-label"]');
-  const modal=document.getElementById('video-modal'),video=document.getElementById('modal-video'),message=document.getElementById('modal-message'),closeButton=document.getElementById('modal-close');
-  let lastTrigger=null,manualReduced=false;
-  const reduced=()=>manualReduced||reducedPreference.matches;
-  const hero=document.querySelector('.hero');
-  function resetHero(){['--hx','--hy','--cx','--cy'].forEach(key=>hero.style.setProperty(key,'0px'));hero.style.setProperty('--mx','73%');hero.style.setProperty('--my','32%')}
-  motionButton.addEventListener('click',()=>{manualReduced=!manualReduced;document.body.classList.toggle('reduce-motion',manualReduced);motionButton.setAttribute('aria-pressed',String(manualReduced));reduceLabel.hidden=manualReduced;enableLabel.hidden=!manualReduced;if(reduced())resetHero()});
-  document.querySelectorAll('.open-video').forEach(button=>button.addEventListener('click',()=>{
-    lastTrigger=button;
-    const source=document.getElementById(button.dataset.video);
-    const sourceURL=source?.currentSrc||source?.getAttribute('src')||source?.querySelector('source')?.src;
-    document.querySelectorAll('video').forEach(item=>item.pause());
-    if(button.dataset.video==='reel-1-video'){
-      const screen=button.closest('.screen'), poster=screen?.querySelector('img'), placeholder=screen?.querySelector('.placeholder-tag');
-      if(sourceURL){poster?.classList.add('hidden');placeholder?.classList.add('hidden');source.hidden=false;source.play().catch(()=>{})}
-      return;
-    }
-    modal.hidden=false;document.body.style.overflow='hidden';
-    video.hidden=!sourceURL;message.hidden=!!sourceURL;
-    if(sourceURL){video.src=sourceURL;video.load();video.play().catch(()=>{})}
-    closeButton.focus();
-  }));
-  function closeModal(){video.pause();video.removeAttribute('src');video.load();modal.hidden=true;document.body.style.overflow='';lastTrigger?.focus()}
-  closeButton.addEventListener('click',closeModal);
-  modal.addEventListener('click',event=>{if(event.target===modal)closeModal()});
-  document.addEventListener('keydown',event=>{if(modal.hidden)return;if(event.key==='Escape')closeModal();if(event.key==='Tab'){const controls=video.hidden?[closeButton]:[closeButton,video],index=controls.indexOf(document.activeElement);if(event.shiftKey&&index===0){event.preventDefault();controls.at(-1).focus()}else if(!event.shiftKey&&index===controls.length-1){event.preventDefault();controls[0].focus()}}});
-  if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))}else document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
-  const fill=document.getElementById('progress-fill'),progressLabel=document.getElementById('progress-label');let scheduled=false;
-  function updateProgress(){scheduled=false;const max=Math.max(1,document.documentElement.scrollHeight-innerHeight),pct=Math.min(100,Math.round(scrollY/max*100));fill.style.width=pct+'%';progressLabel.textContent='Page progress '+pct+'%'}
-  addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(updateProgress)}},{passive:true});updateProgress();
-  let pointerFrame=0,pointerX=0,pointerY=0;
-  function moveHero(){pointerFrame=0;if(reduced())return;const rect=hero.getBoundingClientRect(),x=Math.max(0,Math.min(1,(pointerX-rect.left)/rect.width)),y=Math.max(0,Math.min(1,(pointerY-rect.top)/rect.height));hero.style.setProperty('--mx',x*100+'%');hero.style.setProperty('--my',y*100+'%');hero.style.setProperty('--hx',(x-.5)*22+'px');hero.style.setProperty('--hy',(y-.5)*16+'px');hero.style.setProperty('--cx',(x-.5)*-19+'px');hero.style.setProperty('--cy',(y-.5)*-15+'px')}
-  hero.addEventListener('pointermove',event=>{pointerX=event.clientX;pointerY=event.clientY;if(!pointerFrame)pointerFrame=requestAnimationFrame(moveHero)},{passive:true});
-  hero.addEventListener('pointerleave',resetHero,{passive:true});
-  hero.addEventListener('pointerup',event=>{if(event.pointerType==='touch')setTimeout(resetHero,500)},{passive:true});
-  document.querySelectorAll('.reel').forEach(reel=>reel.addEventListener('pointerdown',event=>{if(event.pointerType==='touch'){reel.classList.add('touch-active');setTimeout(()=>reel.classList.remove('touch-active'),850)}},{passive:true}));
-  if(window.lucide)lucide.createIcons();
+const reducedPreference=matchMedia('(prefers-reduced-motion: reduce)');
+const motionButton=document.getElementById('motion-toggle');
+const reduceLabel=document.querySelector('[data-template-id="motion-reduce-label"]');
+const enableLabel=document.querySelector('[data-template-id="motion-enable-label"]');
+const hero=document.querySelector('.hero');
+let manualReduced=false;
+const reduced=()=>manualReduced||reducedPreference.matches;
+function resetHero(){['--hx','--hy','--cx','--cy'].forEach(k=>hero.style.setProperty(k,'0px'));hero.style.setProperty('--mx','73%');hero.style.setProperty('--my','32%')}
+motionButton.addEventListener('click',()=>{manualReduced=!manualReduced;document.body.classList.toggle('reduce-motion',manualReduced);motionButton.setAttribute('aria-pressed',String(manualReduced));reduceLabel.hidden=manualReduced;enableLabel.hidden=!manualReduced;if(reduced())resetHero()});
+const drives={
+'reel-1-video':'https://drive.google.com/file/d/1sIQLPe1f33rekO_dyVz_5ptny3emEbQS/preview',
+'reel-2-video':'https://drive.google.com/file/d/15O4RiWVT8pfXVKDcimCqq2v3TnlMaIYs/preview',
+'reel-3-video':'https://drive.google.com/file/d/1cRVVmaThXbRCfBJRsrNnzEC_2fHsMFi1/preview',
+'reel-4-video':'https://drive.google.com/file/d/1kNEbSiAT8r9chyXuTgO0yGnmcUGC5nKr/preview',
+'reel-5-video':'https://drive.google.com/file/d/1px2Us8wP5x3vxm55HdbNiQ3WWhCzZRA0/preview',
+'reel-6-video':'https://drive.google.com/file/d/1Flu_nLkbt-2IuRBmarbG3Pi9BhsyVD4R/preview',
+'reel-7-video':'https://drive.google.com/file/d/11XiS3f95TABBtEXVxI9KrZV52mQEs_zE/preview',
+'reel-8-video':'https://drive.google.com/file/d/1uWbiDXrMf104pvU2HQ8cwjaZkVU1fCQA/preview',
+'reel-9-video':'https://drive.google.com/file/d/1peZ8TACSQxtgELErkp54z6RYYpxqX6he/preview',
+'wide-video':'https://drive.google.com/file/d/11WyuKkaURN1k8-p9EF26PdoWxWTC1Nju/preview'
+};
+const st=document.createElement('style');
+st.textContent='.drive-preview{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#151515;z-index:1}.screen .drive-preview,.wide-frame .drive-preview{border-radius:inherit}.screen .island{z-index:5}.screen .reflection{z-index:4}.screen .play{z-index:6}.screen .placeholder-tag{z-index:6}.wide-frame .frame-overlay{z-index:6}.video-preview-active .canva-image,.video-preview-active .placeholder-tag{display:none!important}.video-preview-active .play{display:none!important}';
+document.head.appendChild(st);
+document.querySelectorAll('.open-video').forEach(btn=>{
+const id=btn.dataset.video, box=btn.closest('.screen,.wide-frame');
+if(!box||!drives[id])return;
+const frame=document.createElement('iframe');
+frame.className='drive-preview';frame.title='Video preview';frame.src=drives[id];
+frame.setAttribute('allow','autoplay; fullscreen; picture-in-picture');frame.setAttribute('allowfullscreen','');
+box.prepend(frame);box.classList.add('video-preview-active');
+btn.addEventListener('click',()=>{frame.src=drives[id]+'?autoplay=1'});
+});
+if('IntersectionObserver'in window){const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');o.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(e=>o.observe(e))}else document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible'));
+const fill=document.getElementById('progress-fill'),label=document.getElementById('progress-label');let scheduled=false;
+function progress(){scheduled=false;const max=Math.max(1,document.documentElement.scrollHeight-innerHeight),pct=Math.min(100,Math.round(scrollY/max*100));fill.style.width=pct+'%';label.textContent='Page progress '+pct+'%'}
+addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(progress)}},{passive:true});progress();
+let pf=0,px=0,py=0;
+function move(){pf=0;if(reduced())return;const r=hero.getBoundingClientRect(),x=Math.max(0,Math.min(1,(px-r.left)/r.width)),y=Math.max(0,Math.min(1,(py-r.top)/r.height));hero.style.setProperty('--mx',x*100+'%');hero.style.setProperty('--my',y*100+'%');hero.style.setProperty('--hx',(x-.5)*22+'px');hero.style.setProperty('--hy',(y-.5)*16+'px');hero.style.setProperty('--cx',(x-.5)*-19+'px');hero.style.setProperty('--cy',(y-.5)*-15+'px')}
+hero.addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;if(!pf)pf=requestAnimationFrame(move)},{passive:true});hero.addEventListener('pointerleave',resetHero,{passive:true});
+document.querySelectorAll('.reel').forEach(r=>r.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){r.classList.add('touch-active');setTimeout(()=>r.classList.remove('touch-active'),850)}},{passive:true}));
+if(window.lucide)lucide.createIcons();
 })();
 </script>
  
