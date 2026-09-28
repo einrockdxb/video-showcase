@@ -5,6 +5,7 @@
   <meta name="theme-color" content="#0A0A0A">
   <title>Ein Rock — Our films.</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="hero-fix.css">
   <style>
 /*
   EIN ROCK SOURCE SETTINGS
@@ -60,10 +61,18 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{anim
     <section id="top" class="hero" aria-labelledby="hero-title">
      <div class="hero-light" aria-hidden="true"></div>
      <div class="hero-art" aria-hidden="true">
-      <div class="hud-ring"></div><img data-template-id="hero-brain" class="canva-image brain" loading="lazy" src="canva://MAHWFv4ELxA/1" alt="Orange illuminated brain merging with dark rock and circuitry">
-      <svg class="circuit-field" viewBox="0 0 800 750" aria-hidden="true"><path d="M20 250 H115 L160 205 H255 M35 430 H105 L161 374 H245 M104 610 H175 L230 554 H313 M780 155 H663 L609 211 H548 M796 355 H697 L642 410 H560 M750 600 H670 L607 538 H530"></path><path d="M84 150 H175 L225 101 H350 M20 545 H108 L166 487 H255 M767 505 H692 L638 457 H578 M725 70 H615 L552 136 H505"></path><circle cx="115" cy="250" r="4"></circle><circle cx="161" cy="374" r="4"></circle><circle cx="230" cy="554" r="4"></circle><circle cx="663" cy="155" r="4"></circle><circle cx="642" cy="410" r="4"></circle><circle cx="607" cy="538" r="4"></circle><circle cx="225" cy="101" r="4"></circle><circle cx="638" cy="457" r="4"></circle>
+      <div class="hero-glow"></div>
+      <svg class="hero-tech-lines" viewBox="0 0 800 750" aria-hidden="true">
+       <path d="M0 180 H105 L164 121 H250 L292 79 H380"></path>
+       <path d="M0 515 H95 L151 459 H235 L286 408 H342"></path>
+       <path d="M800 145 H690 L634 201 H554 L510 245 H447"></path>
+       <path d="M800 520 H708 L650 462 H572 L520 410 H468"></path>
+       <path d="M118 0 V78 L164 124"></path>
+       <path d="M685 750 V674 L636 625"></path>
+       <circle cx="164" cy="121" r="3"></circle><circle cx="151" cy="459" r="3"></circle>
+       <circle cx="634" cy="201" r="3"></circle><circle cx="650" cy="462" r="3"></circle>
       </svg>
-      <div class="scan-trace"></div>
+      <img data-template-id="hero-brain" class="canva-image brain" loading="lazy" src="hero-brain.png" alt="Orange illuminated brain merging with dark rock and circuitry">
      </div>
      <div class="hero-inner">
       <p data-template-id="positioning" class="canva-text eyebrow positioning" style="color: rgb(255, 85, 0);"><span aria-hidden="true" style="display:inline-block;width:7px;height:7px;margin-right:9px;border-radius:50%;background:#ff5500;vertical-align:middle;"></span><span data-template-id="positioning-text" class="canva-text" style="color: rgb(255, 85, 0); font-weight: 600; font-style: normal; font-size: 16px;">We do marketing... properly.</span></p>
